@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="./css/fullpage.css">
+    <link rel="stylesheet" href="./css/master.css">
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">
+      const $ = require("jquery");
+    </script>
+  </head>
+  <body>
+    <h1>GameOS-Store</h1>
+    <h2 id="WelcomeUser"></h2>
+
+    <div class="scrollmenu" id="div_avaiable_games">
+
+      <div> <img src="https://ven.prow.li/GameOS/src/img/store/appimg/uno.png" alt="javascript:alert('error);"> </div>
+
+
+    </div>
+    <script src="./js/main.js" charset="utf-8"></script>
+    <script src="./js/mysql.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+      $("document").ready(async function() {
+        document.onkeydown = checkReload;
+        CheckStoreAnmeldung();
+    });
+    </script>
+
+    <script src="./js/fullpage.js" charset="utf-8"></script>
+  </body>
+</html>

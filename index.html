@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="./css/fullpage.css">
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">
+      const $ = require("jquery");
+    </script>
+  </head>
+  <body>
+    <h1>Game OS</h1>
+    <h3>Remastered</h3> <br>
+    <h5 id="Version"></h5>
+    <h2 id="WelcomeUser"></h2>
+    <div id="LoginDIV">
+      <button type="button" id="AnmeldeButton" class="btn btn-success" onclick="Anmelden(document.getElementById('username').value, document.getElementById('password').value);" name="button">Anmelden</button>
+      <button type="button" onclick="Registrieren();" class="btn btn-warning">Registrieren</button> <br>
+      <input type="text" placeholder="Benutzername" id="username"> <br> <input type="password" id="password" placeholder="Passwort"> <br>
+      <input type="checkbox" checked id="keepLogin"> Angemeldet bleiben?
+    </div>
+    <button type="button" class="btn btn-large" onclick="GoTo('Store.html')" name="button">Zum Store</button>
+    <div class="NoGames">
+
+    </div>
+    <script src="./js/main.js" charset="utf-8"></script>
+    <script src="./js/mysql.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      $("document").ready(async function() {
+        document.onkeydown = checkReload;
+        CheckLocalAnmeldung();
+    });
+    </script>
+
+    <script src="./js/fullpage.js" charset="utf-8"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">
+      const $ = require("jquery")
+    </script>
+  </head>
+  <body>
+    <h1>Game OS</h1>
+    <h3>Remastered</h3> <br>
+    <h5 id="Version"></h5>
+    <div id="LoginDIV">
+      <button type="button" class="btn btn-success" onclick="Anmelden();" name="button">Anmelden</button>
+      <button type="button" onclick="Registrieren();" class="btn btn-warning">Registrieren</button> <br>
+      <input type="text" placeholder="Benutzername" id="username"> <br> <input type="password" id="password" placeholder="Passwort">
+    </div>
+    <script src="./js/mysql.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      $("document").ready(async function() {
+        document.onkeydown = checkReload;
+    });
+    </script>
+  </body>
+</html>
