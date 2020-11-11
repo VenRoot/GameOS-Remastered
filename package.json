@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "crypto-js": "^4.0.0",
-    "mysql2": "^2.1.0"
+    "mysql2": "^2.1.0",
+    "simple-oauth2": "^4.1.0"
   }
 }
