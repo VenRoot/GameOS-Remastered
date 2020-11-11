@@ -1,3 +1,7 @@
+#Benutzerdefinierte Userdaten, zurzeit noch im Source Code vorhanden
+#Vielleicht in %USERPROFILE% speichern? Siehe IDEEN
+location
+
 # Logs
 logs
 *.log

@@ -3,19 +3,47 @@ GameOS besteht zu dem größten Teil aus einem Store, in welchem man verschieden
 Die Anmelde-Daten für den Store werden zwischengespeichert. Dazu wird ein Key generiert und über MD5 gehashed. Dieser Key sollte immer wieder generiert werden können, da er nicht gespeichert wird.
  Anschließend wird er genutzt, um die Daten in SHA256 zu speichern. Im Store werden die Daten wieder entschlüsselt mit dem MD5 Key, welcher generiert wurde und der User wird angemeldet
 
-In der app.asar sind nur die Hauptfunktionen. Die Spielmodule befinden sich neben der App.asar in Ordnern
-ODER werden außerhalb in %appdata% gespeichert, damit wären sie unabhängig vom Programm selber
+Programmstruktur:
 
-Somit müssen alle Sicherheitsrelevanten Features in der sicheren App.asar bleiben, vor jedem Spielstart wird der MD5 hash von den Spielen geprüft
+
+  In der app.asar sind nur die Hauptfunktionen. Die Spielmodule befinden sich neben der app.asar in Ordnern
+  ODER werden außerhalb in %appdata% gespeichert, damit wären sie unabhängig vom Programm
+  Somit müssen alle Sicherheitsrelevanten Features in der sicheren App.asar bleiben, vor jedem Spielstart wird der MD5 hash von den Spielen geprüft
+
+    Eher in %USERPROFILE%\.gameos?
+    Ansonsten werden der Installation die Daten zusammen mit der compilierten GameOS.exe in ./data/ gespeichert (AppData\Roaming\Local\GameOS\)
+
+
+  Updates:
+    Wie werden Updates geregelt? Bei jedem Update müsste entweder die gesamte app.asar neu heruntergeladen werden (internal Update)
+    ODER
+    Es wird ein neuer Ordner app-x.x.x erstellt, dort wird das Update neu erstellt, zusammen mit einem Registry-Eintrag? (global Update)
+
+
 
 
 Game-Store:
 
-Es werden alle Games aufgelistet, Button zum installieren, Button wird dann durch Progress-Bar ersetzt. Nachdem das Spiel installiert wurde, wird es mit MD5 geprüft.
-Danach wird das Game dem Profil hinzugefügt. Alle Spiele im Profil werden bei jedem Start auf ein Update geprüft. Online-Modus sind nur mit der neuesten Funktion verfügbar.
+  Es werden alle Games aufgelistet, Button zum installieren, Button wird dann durch Progress-Bar ersetzt. Nachdem das Spiel installiert wurde, wird es mit MD5 geprüft.
+  Danach wird das Game dem Profil hinzugefügt. Alle Spiele im Profil werden bei jedem Start auf ein Update geprüft. Online-Modus sind nur mit der neuesten Funktion verfügbar.
 
-Im Game-Store sowohl als im Hauptmenü am Game selbst kann man die Daten löschen, das Spiel deinstallieren oder Updaten.
-Generell werden mit dem Info-Button der Speicherort, die Größe und die Version des Spiels angezeigt
+  Im Game-Store sowohl als im Hauptmenü am Game selbst kann man die Daten löschen, das Spiel deinstallieren oder Updaten.
+  Generell werden mit dem Info-Button der Speicherort, die Größe und die Version des Spiels angezeigt
 
 
 Backend mit SSL
+
+
+  Backend sollte am besten alle Berechtigungen prüfen und sicherstellen, dass der Client autorisiert ist und auf die Datenbanken zugreifen darf.
+  Das heißt kein User sollte mit wget/curl den Client simulieren können, um unautorisierte Änderungen an den Benutzerdaten vornehmen zu können.
+
+  Alternative Lösung:
+    Closed Source cpp Programm, welches den Source Code validiert, diese Prüfung dann dem Server weitergibt und der Client nur mit der einen Session
+    arbeiten darf. Mit jeder neuen Session wird ein neuer Key generiert.
+
+
+Installer:
+  Keinen default electron-winstaller?
+  Custom:
+    Auswahl ob globale Installation (ProgramFiles) oder lokale Installation pro User (AppData)
+    Registry-Einträge für weitere Einstellungen?
