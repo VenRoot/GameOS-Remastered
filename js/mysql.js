@@ -4,7 +4,7 @@ const {app, BrowserWindow} = require('electron').remote;
 const con = mysql.createConnection({
   host: "ven.prow.li",
   user: "ven",
-  password: "67cWjv0~",
+  password: "*****",
   database: "vendb",
   port: "3306"
 });
