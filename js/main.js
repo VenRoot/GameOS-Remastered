@@ -4,11 +4,75 @@ const SHA256 = require("crypto-js/sha256");
 const MD5 = require("crypto-js/md5");
 const md5 = MD5;
 const fs = require('fs');
+const sys = require('sys');
+const exec = require('child_process').exec;
+const https = require('https');
+const crypto = require('crypto');
+const os = require('os');
 
 const App = {
-  Version: "0.0.1",
-  Build: getBuild()
+  Version: "1.0.0",
+  Build: "010101"
 }
+
+async function validApp(version, build)
+{
+  return new Promise(async function(resolve, reject) {
+    if(version == undefined && build == undefined)
+    {
+      version = App.Version;
+      build = App.Build;
+    }
+    let uwu = await exec(`node.exe ./js/val.js ${version} ${build}`, function (err, stdout, stderr)
+  {
+    if(err) { throw err; }
+    console.log(stdout);
+    sessionStorage._TMPHASH = stdout;
+  });
+
+  uwu.on('exit', async function(code)
+{
+  if(code != 0)
+  {
+    let _log = {
+      code: "INVALID_RUNTIME",
+      release: os.release,
+      memory: os.totalmem,
+      memoryfree: os.freemem,
+      cpu: os.cpus()[0].model,
+      cpus: os.cpus().length
+    }
+    _log = await JSON.stringify(_log);
+    await fs.writeFileSync('./error.log',_log);
+    alert("ERROR! HASH INVALID! CLOSING PROGRAM!");
+    process.exit(1);
+
+  }
+  console.log(code);
+});
+resolve(sessionStorage._TMPHASH-1);
+  });
+}
+
+function getChecksum(path) {
+  return new Promise(function (resolve, reject) {
+    // crypto.createHash('sha1');
+    // crypto.createHash('sha256');
+    const hash = crypto.createHash('md5');
+    const input = fs.createReadStream(path);
+
+    input.on('error', reject);
+
+    input.on('data', function (chunk) {
+      hash.update(chunk);
+    });
+
+    input.on('close', function () {
+      resolve(hash.digest('hex'));
+    });
+  });
+}
+
 
 async function getLocation()
 {
