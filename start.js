@@ -1,9 +1,10 @@
-const {app, BrowserWindow} = require ('electron');
+const {app, BrowserWindow, Notification, dialog, autoUpdater } = require ('electron');
 const path = require('path');
 const url = require('url');
 let wohin = "./index.html";
 const fs = require('fs');
 const storage = require('electron-localstorage');
+const spawnObj = require('child_process').spawn
 
 require('v8-compile-cache');
 
@@ -44,26 +45,6 @@ async function WhereToGo()
     }
   });
 }
-
-// async function WhereToGo(win)
-// {
-//   console.log("Bin hier");
-//   return new Promise(async function(resolve, reject) {
-//     let loc = await win.webContents.executeJavaScript('localStorage.getItem("wohin");', false);
-//     console.log("Bin hier2");
-//     if(loc === undefined)
-//     {
-//       await win.webContents.executeJavaScript("localStorage.setItem('wohin', './index.html');")
-//       console.warn(loc)
-//       loc = "./index.html";
-//     }
-//     console.log("Bin hier3");
-//     console.log(loc);
-//     resolve(loc);
-//   });
-// }
-
-//WhereToGo();
 
 if(handleSquirrelEvent(app))
 {
@@ -170,8 +151,72 @@ async function createWindow(){
    });
 }
 
+
+//------------------------UPDATE-----------------------------------
+
+// const server = 'https://ven.prow.li';
+// const url = `${server}/GameOSR/${process.platform}/${app.getVersion()}`;
+//
+// autoUpdater.setFeedURL({url});
+// setInterval(() => {
+//   autoUpdater.checkForUpdates()
+// }, 60000);
+//
+// autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+//  const dialogOpts = {
+//    type: 'info',
+//    buttons: ['Neustarten', 'Später'],
+//    title: 'GameOS Update',
+//    message: process.platform === 'win32' ? releaseNotes : releaseName,
+//    detail: 'Eine neue Version wurde heruntergladen. Starte die Anwendung neu, um die Updates anzuwenden.'
+//   }
+//
+//   dialog.showMessageBox(dialogOpts).then((returnValue) => {
+//     if (returnValue.response === 0) autoUpdater.quitAndInstall()
+//   })
+// });
+//
+// autoUpdater.on('error', message => {
+//  console.error('Beim Update ist ein Fehler aufgetreten!');
+//  console.error(message);
+// });
+
+//---------------------END-UPDATE-------------------------
 //Starte create window funktion
 app.on('ready', createWindow);
+
+async function getErrorLog()
+{
+  return new Promise(async function(resolve, reject) {
+    await fs.readFile("./error.log", "utf8", function(err, data) {
+      if(err) throw err;
+      resolve(data);
+    });
+  });
+}
+
+app.setAppUserModelId(process.execPath) //Um Benachrichtigungen anzeigen zu können
+
+app.on('render-process-gone', async (details) =>
+{
+  console.error("PROCESS DIED");
+  let message = "";
+  let top = "";
+  let e_log = await getErrorLog();
+  //console.log(e_log);
+  e_log = await JSON.parse(e_log);
+  //console.log("SWITCH");
+
+  switch (e_log.code) {
+    case "INVALID_RUNTIME": top = "Code check failed!"; message = "The Code Checksum is invalid! Either the code got corrupted or modified!\nPlease make sure that: \n\n1. The process has access to the runtime folder\n2. The app is up to date\n\nIf you encounter this problem many times, please run the Recovery Tool or reinstall the newest version from the official GitHub page"; break;
+
+  }
+  //console.log("SHOW BOX");
+  dialog.showErrorBox(top, message);
+  new Notification({title: "Crash", body: "Process crashed! Please view error log. "}).show();
+  app.exit();
+  //console.log("OWOWOOWOWOWO");
+})
 
 //Verlasse, wenn alle Fenster geschlossen sind
 app.on('window-all-closed', () => {
